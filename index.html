@@ -1,23 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>QR Code Generator</title>
   <style>
     body {
-      background-color: #8a8a8a;
-      color: rgb(255, 255, 255);
+      background-color: #111;
+      color: white;
       font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 50px;
+      margin: 0;
+      padding: 20px;
     }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
     input {
       padding: 10px;
-      width: 300px;
+      width: 90%;
+      max-width: 300px;
       border-radius: 5px;
       border: none;
-      margin-bottom: 10px;
+      margin: 10px 0;
+      font-size: 1em;
     }
+
     button {
       padding: 10px 20px;
       background-color: #4c44bb;
@@ -25,64 +40,88 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      font-size: 1em;
+      margin: 5px;
+    }
+
+    button:hover {
+      background-color: #362f91;
+    }
+
+    .qr-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    @media screen and (max-width: 500px) {
+      input, button {
+        width: 100%;
+        box-sizing: border-box;
+        font-size: 1rem;
+      }
+
+      h1 {
+        font-size: 1.5em;
+      }
     }
     button:hover{
         background-color: #9089fc;
         transition: background-color 0.5s ease;
     }
-    #qrcode {
-      margin-top: 20px;
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-    }
   </style>
 </head>
 <body>
 
-  <h1>QR Code Generator</h1>
-  <input type="text" id="urlInput" placeholder="Enter a URL">
-  <br>
-  <button onclick="generateQRCode()">Generate QR Code</button>
+  <div class="container">
+    <h1>QR Code Generator</h1>
 
-  <div id="qrcode"></div>
-  <br>
-<button onclick="downloadQR()">Download QR Code</button>
+    <input type="text" id="urlInput" placeholder="Enter a URL" />
+    <button onclick="generateQRCode()">Generate QR Code</button>
 
+    <div class="qr-wrapper">
+      <div id="qrcode"></div>
+      <button onclick="downloadQR()">Download QR Code</button>
+    </div>
+  </div>
 
+  <!-- QRCode.js library -->
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+
   <script>
     function generateQRCode() {
-      const url = document.getElementById("urlInput").value;
+      const url = document.getElementById("urlInput").value.trim();
       const qrContainer = document.getElementById("qrcode");
 
-      // Clear previous QR code
-      qrContainer.innerHTML = "";
+      qrContainer.innerHTML = ""; // Clear previous QR
 
-      if (url.trim() !== "") {
+      if (url) {
         new QRCode(qrContainer, {
           text: url,
           width: 200,
           height: 200,
-          colorDark : "#ffffff",
-          colorLight : "#000000",
-          correctLevel : QRCode.CorrectLevel.H
+          colorDark: "#ffffff",
+          colorLight: "#000000",
+          correctLevel: QRCode.CorrectLevel.H
         });
+      } else {
+        alert("Please enter a valid URL.");
       }
     }
+
     function downloadQR() {
-  const qrImg = document.querySelector("#qrcode img");
+      const qrImg = document.querySelector("#qrcode img");
 
-  if (qrImg) {
-    const link = document.createElement("a");
-    link.href = qrImg.src;
-    link.download = "qr-code.png";
-    link.click();
-  } else {
-    alert("Generate a QR code first!");
-  }
-}
-
+      if (qrImg) {
+        const link = document.createElement("a");
+        link.href = qrImg.src;
+        link.download = "qr-code.png";
+        link.click();
+      } else {
+        alert("Generate a QR code first!");
+      }
+    }
   </script>
 
 </body>
